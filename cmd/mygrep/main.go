@@ -54,6 +54,16 @@ func matchNext(regex, text string, captures []string) bool {
 		return false
 	}
 
+	if regex[0] == '[' {
+		charSet, _, nextIdx := captureCharSet(regex)
+
+		// if negated {
+		// 	return !matchCharSet(charSet, line[0]) && matchNext(pattern[nextIdx:], line[1:], captures)
+		// }
+
+		return matchCharSet(charSet, text[0]) && matchNext(regex[nextIdx:], text[1:], captures)
+	}
+
 	if regex[0] == '\\' {
 		if regex[1] == 'd' {
 			return matchDigit(text[0]) && matchNext(regex[2:], text[1:], captures)
@@ -99,6 +109,36 @@ func matchAlphaNumeric(ch byte) bool {
 	return matchDigit(ch) || matchAlpha(ch) || ch == '_'
 }
 
+func captureCharSet(pattern string) (string, bool, int) {
+	i := 1
+	charSet := ""
+	negated := false
+
+	if pattern[1] == '^' {
+		i = 2
+		negated = true
+	}
+
+	for ; pattern[i] != ']'; i += 1 {
+		charSet += string(pattern[i])
+	}
+
+	nextIdx := i + 1
+
+	return charSet, negated, nextIdx
+}
+
+func matchCharSet(charSet string, ch byte) bool {
+	for i := 0; i < len(charSet); i++ {
+		if charSet[i] == ch {
+			return true
+		}
+	}
+
+	return false
+}
+
+//
 // func matchNext(pattern, line string, captures []string) bool {
 //		if pattern == "" {
 //			return true
@@ -174,9 +214,6 @@ func matchAlphaNumeric(ch byte) bool {
 //		return false
 //	}
 //
-//	func matchLiteral(pattern, line byte) bool {
-//		return pattern == line || pattern == '.'
-//	}
 //
 // // This function is truly magic
 //
@@ -195,34 +232,6 @@ func matchAlphaNumeric(ch byte) bool {
 // }
 
 //
-// func matchCharSet(charSet string, ch byte) bool {
-// 	for i := 0; i < len(charSet); i++ {
-// 		if charSet[i] == ch {
-// 			return true
-// 		}
-// 	}
-//
-// 	return false
-// }
-//
-// func captureCharSet(pattern string) (string, bool, int) {
-// 	i := 1
-// 	charSet := ""
-// 	negated := false
-//
-// 	if pattern[1] == '^' {
-// 		i = 2
-// 		negated = true
-// 	}
-//
-// 	for ; pattern[i] != ']'; i += 1 {
-// 		charSet += string(pattern[i])
-// 	}
-//
-// 	nextIdx := i + 1
-//
-// 	return charSet, negated, nextIdx
-// }
 //
 // func captureAlternation(pattern string) ([]string, int) {
 // 	i := 0
