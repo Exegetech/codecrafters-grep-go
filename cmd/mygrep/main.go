@@ -73,6 +73,16 @@ func matchNext(regex, text string, captures []string) bool {
 	if regex[0] == '[' {
 		charSet, negated, nextIdx := captureCharSet(regex)
 
+		if len(regex) > nextIdx {
+			if regex[nextIdx] == '+' {
+				if negated {
+					return !matchCharSet(charSet, text[0]) && matchNext(regex[nextIdx+1:], text[1:], captures)
+				}
+
+				return matchCharSet(charSet, text[0]) && matchNext(regex[nextIdx+1:], text[1:], captures)
+			}
+		}
+
 		if negated {
 			return !matchCharSet(charSet, text[0]) && matchNext(regex[nextIdx:], text[1:], captures)
 		}
@@ -88,6 +98,17 @@ func matchNext(regex, text string, captures []string) bool {
 
 			if regex[1] == 'w' {
 				return matchAlphaNumeric(text[0]) && matchNext(regex[2:], text[1:], captures)
+			}
+
+			if regex[1] == '1' {
+				firstRegex := captures[0]
+				firstText := text[:len(firstRegex)]
+				if matchNext(firstRegex, firstText, []string{}) {
+					nextRegex := regex[2:]
+					nextText := text[len(captures[0]):]
+
+					return matchNext(nextRegex, nextText, captures)
+				}
 			}
 		}
 
