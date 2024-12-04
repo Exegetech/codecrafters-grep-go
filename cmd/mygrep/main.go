@@ -58,6 +58,10 @@ func matchNext(regex, text string, captures []string) bool {
 		if regex[1] == 'd' {
 			return matchDigit(text[0]) && matchNext(regex[2:], text[1:], captures)
 		}
+
+		if regex[1] == 'w' {
+			return matchAlphaNumeric(text[0]) && matchNext(regex[2:], text[1:], captures)
+		}
 	}
 
 	return matchExact(regex[0], text[0]) && matchNext(regex[1:], text[1:], captures)
