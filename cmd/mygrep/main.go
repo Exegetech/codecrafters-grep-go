@@ -78,6 +78,14 @@ func matchNext(regex, text string, captures []string) bool {
 		if regex[1] == '+' {
 			return matchExact(regex[0], text[0]) && matchStar(regex[0], regex[2:], text[1:], captures)
 		}
+
+		if regex[1] == '?' {
+			if regex[0] != text[0] {
+				return matchNext(regex[2:], text, captures)
+			}
+
+			return matchNext(regex[2:], text[1:], captures)
+		}
 	}
 
 	return matchExact(regex[0], text[0]) && matchNext(regex[1:], text[1:], captures)
