@@ -1,2 +1,2 @@
 #!/bin/bash
-go test cmd/mygrep/**
+go test -v cmd/mygrep/**

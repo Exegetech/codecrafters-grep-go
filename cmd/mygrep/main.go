@@ -46,10 +46,12 @@ func match(regex, text string) bool {
 }
 
 func matchNext(regex, text string, captures []string) bool {
-	fmt.Println("regex: ", regex, "text: ", text)
-
 	if regex == "" {
 		return true
+	}
+
+	if text == "" {
+		return false
 	}
 
 	if regex[0] == '\\' {
