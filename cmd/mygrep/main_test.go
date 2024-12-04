@@ -23,6 +23,14 @@ var tests = []struct {
 
 	{`[^xyz]`, "apple", true},
 	{`[^anb]`, "banana", false},
+
+	{`\d apple`, "1 apple", true},
+	{`\d apple`, "3 oranges", false},
+	{`\d\d\d apples`, "sally has 124 apples", true},
+	{`\d\\d\\d apples`, "sally has 12 apples", false},
+	{`\d \w\w\ws`, "sally has 3 dogs", true},
+	{`\d \w\w\ws`, "sally has 4 dogs", true},
+	{`\d \w\w\ws`, "sally has 1 dog", false},
 }
 
 func TestFlagParser(t *testing.T) {
