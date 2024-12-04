@@ -11,6 +11,7 @@ var tests = []struct {
 }{
 	{"a", "apple", true},
 	{`\d`, "apple123", true},
+	{`\d`, "123", true},
 }
 
 func TestFlagParser(t *testing.T) {
