@@ -28,9 +28,9 @@ func main() {
 }
 
 func match(regex, text string) bool {
-	// if pattern[0] == '^' {
-	// 	return matchNext(pattern[1:], line, []string{})
-	// }
+	if regex[0] == '^' {
+		return matchNext(regex[1:], text, []string{})
+	}
 
 	for {
 		if matchNext(regex, text, []string{}) {

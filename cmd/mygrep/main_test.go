@@ -31,6 +31,9 @@ var tests = []struct {
 	{`\d \w\w\ws`, "sally has 3 dogs", true},
 	{`\d \w\w\ws`, "sally has 4 dogs", true},
 	{`\d \w\w\ws`, "sally has 1 dog", false},
+
+	{`^log`, "log", true},
+	{`^log`, "does not log", false},
 }
 
 func TestFlagParser(t *testing.T) {
