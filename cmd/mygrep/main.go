@@ -64,13 +64,19 @@ func matchNext(regex, text string, captures []string) bool {
 		return matchCharSet(charSet, text[0]) && matchNext(regex[nextIdx:], text[1:], captures)
 	}
 
-	if regex[0] == '\\' {
-		if regex[1] == 'd' {
-			return matchDigit(text[0]) && matchNext(regex[2:], text[1:], captures)
+	if len(regex) >= 2 {
+		if regex[0] == '\\' {
+			if regex[1] == 'd' {
+				return matchDigit(text[0]) && matchNext(regex[2:], text[1:], captures)
+			}
+
+			if regex[1] == 'w' {
+				return matchAlphaNumeric(text[0]) && matchNext(regex[2:], text[1:], captures)
+			}
 		}
 
-		if regex[1] == 'w' {
-			return matchAlphaNumeric(text[0]) && matchNext(regex[2:], text[1:], captures)
+		if regex[1] == '+' {
+			return matchExact(regex[0], text[0]) && matchStar(regex[0], regex[2:], text[1:], captures)
 		}
 	}
 
@@ -136,6 +142,21 @@ func matchCharSet(charSet string, ch byte) bool {
 	}
 
 	return false
+}
+
+// This function is truly magic
+func matchStar(ch byte, regex, text string, captures []string) bool {
+	for {
+		if matchNext(regex, text, captures) {
+			return true
+		}
+
+		if text == "" || (text[0] != ch && ch != '.') {
+			return false
+		}
+
+		text = text[1:]
+	}
 }
 
 //
@@ -215,22 +236,6 @@ func matchCharSet(charSet string, ch byte) bool {
 //	}
 //
 //
-// // This function is truly magic
-//
-//	func matchStar(ch byte, pattern, line string, captures []string) bool {
-//		for {
-//			if matchNext(pattern, line, captures) {
-//				return true
-//			}
-//
-//			if line == "" || (line[0] != ch && ch != '.') {
-//				return false
-//			}
-//
-//			line = line[1:]
-//		}
-// }
-
 //
 //
 // func captureAlternation(pattern string) ([]string, int) {
