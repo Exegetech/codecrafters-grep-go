@@ -10,6 +10,7 @@ var tests = []struct {
 	result bool
 }{
 	{`a`, "apple", true},
+	{`a`, "dog", false},
 
 	{`\d`, "apple123", true},
 	{`\d`, "123", true},
@@ -19,6 +20,9 @@ var tests = []struct {
 
 	{`[abc]`, "apple", true},
 	{`[abc]`, "dog", false},
+
+	{`[^xyz]`, "apple", true},
+	{`[^anb]`, "banana", false},
 }
 
 func TestFlagParser(t *testing.T) {

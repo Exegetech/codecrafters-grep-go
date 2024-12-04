@@ -55,11 +55,11 @@ func matchNext(regex, text string, captures []string) bool {
 	}
 
 	if regex[0] == '[' {
-		charSet, _, nextIdx := captureCharSet(regex)
+		charSet, negated, nextIdx := captureCharSet(regex)
 
-		// if negated {
-		// 	return !matchCharSet(charSet, line[0]) && matchNext(pattern[nextIdx:], line[1:], captures)
-		// }
+		if negated {
+			return !matchCharSet(charSet, text[0]) && matchNext(regex[nextIdx:], text[1:], captures)
+		}
 
 		return matchCharSet(charSet, text[0]) && matchNext(regex[nextIdx:], text[1:], captures)
 	}
