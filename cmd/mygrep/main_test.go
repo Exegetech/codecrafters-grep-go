@@ -46,6 +46,9 @@ var tests = []struct {
 	{`ca?t`, "act", true},
 	{`ca?t`, "dog", false},
 	{`ca?t`, "cag", false},
+
+	{`d.g`, "dog", true},
+	{`d.g`, "dg", false},
 }
 
 func TestFlagParser(t *testing.T) {
