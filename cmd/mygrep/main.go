@@ -51,7 +51,7 @@ func matchNext(regex, text string, captures []string) bool {
 	}
 
 	if text == "" {
-		return false
+		return regex[0] == '$'
 	}
 
 	if regex[0] == '[' {
